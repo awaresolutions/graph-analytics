@@ -1,2 +1,5 @@
-gremlinpython
+streamlit
 sentence-transformers
+azure-search-documents
+gremlinpython
+azure-cosmos
