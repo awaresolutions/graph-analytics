@@ -1,0 +1,41 @@
+# ==========================================
+# 1. STREAMLIT SECURITY BOUNDARIES
+# ==========================================
+# Ignore local Streamlit configuration and credentials
+.streamlit/
+.streamlit/secrets.toml
+
+# ==========================================
+# 2. PYTHON VIRTUAL ENVIRONMENT ISOLATION
+# ==========================================
+# Match standard local venv paths directly in this folder
+venv/
+.venv/
+ENV/
+env/
+
+# Match venv paths if they are located one level above this folder
+../venv/
+../.venv/
+
+# Deep wildcard scanning to catch nested environment folders
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
+
+# ==========================================
+# 3. PYTHON SYSTEM CACHE AND COMPILE FLUSH
+# ==========================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ==========================================
+# 4. OS SPECIFIC METADATA FILTERS
+# ==========================================
+.DS_Store
+Thumbs.db
