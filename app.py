@@ -7,12 +7,14 @@ from azure.search.documents.models import VectorizedQuery
 # ==========================================
 # 1. SETUP AZURE CONFIGURATION BOUNDARY
 # ==========================================
-
+# Target Indexing infrastructure routing addresses
 AZURE_SEARCH_ENDPOINT = "https://dealer-graph-search.search.windows.net"
-AZURE_SEARCH_KEY = "33mCsSi17cPWEL9citGuqLT7t0HqL3K0qJ97ao5u7LAzSeDsG75f"
 INDEX_NAME = "dealer-graph-vector-index"
 
-# Initialize Azure Search Client Connection
+# Fetch credentials securely from local secrets.toml or Streamlit Cloud Console
+AZURE_SEARCH_KEY = st.secrets["AZURE_SEARCH_KEY"]
+
+# Initialize Azure Search Client Connection Gate
 credential = AzureKeyCredential(AZURE_SEARCH_KEY)
 search_client = SearchClient(
     endpoint=AZURE_SEARCH_ENDPOINT,
@@ -47,13 +49,35 @@ st.sidebar.success("Database: Cosmos DB (Connected)")
 st.sidebar.success("Index: Azure AI Search (Live)")
 st.sidebar.success("Embedding Engine: Local MiniLM (Active)")
 
-# Natural Language Query Input Interface Layout
+# Initialize session state tracking variable for the query text box if not present
+if "search_query" not in st.session_state:
+    st.session_state.search_query = ""
+
+# Action callback routine to empty out the session state string tracker when clicked
+def clear_search_callback():
+    st.session_state.search_query = ""
+
+# Natural Language Query Input Interface Layout with dynamic side-by-side buttons
 st.subheader("🔍 Search Vehicle Inventory & Graph Insights")
-user_query = st.text_input(
-    label="Ask a question about the lot context:",
-    placeholder="e.g., Show me premium sedans with active customer follow ups or luxury SUVs in transit...",
-    help="Type your question naturally. The system will vectorize this phrase and perform a mathematical similarity search."
-)
+
+# Split the layout into two horizontal columns (85% width for input bar, 15% for button)
+input_col, button_col = st.columns([17, 3])
+
+with input_col:
+    user_query = st.text_input(
+        label="Ask a question about the lot context:",
+        value=st.session_state.search_query,
+        key="search_query",
+        placeholder="e.g., Show me premium sedans with active customer follow ups or luxury SUVs in transit...",
+        label_visibility="collapsed" # Hides text headers for a cleaner layout line
+    )
+
+with button_col:
+    st.button(
+        label="🧹 Clear Search", 
+        on_click=clear_search_callback, 
+        use_container_width=True
+    )
 
 # ==========================================
 # 4. EXECUTE VECTOR SIMILARITY QUERY FIELD
