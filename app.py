@@ -5,16 +5,21 @@ from azure.search.documents import SearchClient
 from azure.search.documents.models import VectorizedQuery
 
 # ==========================================
-# 1. SETUP AZURE CONFIGURATION BOUNDARY
+# 1. SETUP CLOUD CONFIGURATION BOUNDARIES
 # ==========================================
-# Target Indexing infrastructure routing addresses
+# Azure AI Search (Vector Index Infrastructure Engine)
 AZURE_SEARCH_ENDPOINT = "https://dealer-graph-search.search.windows.net"
 INDEX_NAME = "dealer-graph-vector-index"
-
-# Fetch credentials securely from local secrets.toml or Streamlit Cloud Console
 AZURE_SEARCH_KEY = st.secrets["AZURE_SEARCH_KEY"]
 
-# Initialize Azure Search Client Connection Gate
+# Azure Cosmos DB (Gremlin Graph Database Engine)
+# Ingesting cluster properties dynamically using your exact secrets.toml schema key syntax
+COSMOS_ENDPOINT = st.secrets["COSMOS_ENDPOINT"]
+COSMOS_KEY = st.secrets["COSMOS_KEY"]
+COSMOS_DB_NAME = st.secrets["COSMOS_DB"]
+COSMOS_CONTAINER_NAME = st.secrets["COSMOS_CONTAINER"]
+
+# Initialize Azure AI Search Client Connection Gateway
 credential = AzureKeyCredential(AZURE_SEARCH_KEY)
 search_client = SearchClient(
     endpoint=AZURE_SEARCH_ENDPOINT,
